@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CareGPT AI heart-disease screening result.">
+  <title>CareGPT AI | Your Screening Result</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="result-page">
+  <header class="site-header" data-header>
+    <a class="brand" href="{{ url_for('index') }}" aria-label="CareGPT AI home"><span class="brand-mark" aria-hidden="true"><span></span><i></i></span><span>CareGPT <b>AI</b></span></a>
+    <nav class="site-nav" aria-label="Main navigation"><a href="{{ url_for('index') }}#assessment">New assessment</a><a href="{{ url_for('chat') }}">Care companion</a></nav>
+    <div class="header-actions"><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><span aria-hidden="true">◐</span></button><a class="button button-small button-primary hide-mobile" href="{{ url_for('chat') }}">Ask CareGPT <span aria-hidden="true">→</span></a></div>
+  </header>
+
+  <main class="result-shell shell">
+    <div class="result-heading reveal">
+      <div><a class="back-link" href="{{ url_for('index') }}#assessment">← Back to assessment</a><div class="eyebrow">Your heart health screening</div><h1>Results with <span>perspective.</span></h1><p>Use this estimate to guide a thoughtful conversation with a qualified healthcare professional.</p></div>
+      <div class="result-actions no-print"><button class="button button-ghost button-small" type="button" data-print>Download report <span aria-hidden="true">↓</span></button><a class="button button-primary button-small" href="{{ url_for('chat') }}">Start a chat <span aria-hidden="true">→</span></a></div>
+    </div>
+
+    <section class="result-overview">
+      <article class="result-primary-card reveal">
+        <div class="result-status-row"><span class="status-dot {% if result.prediction == 1 %}status-high{% else %}status-low{% endif %}"></span><span>Screening classification</span><span class="session-id">SESSION RESULT</span></div>
+        <div class="result-main-grid">
+          <div class="result-label"><p class="risk-pill {% if result.prediction == 1 %}risk-pill-high{% else %}risk-pill-low{% endif %}">{{ result.risk_label }}</p><h2>{% if result.prediction == 1 %}Follow up with<br>careful attention.{% else %}Keep prevention<br>in focus.{% endif %}</h2><p>This model estimates a <strong>{{ result.risk_probability }}%</strong> likelihood of its high-risk class from the information entered.</p></div>
+          <div class="confidence-display">
+            <div class="confidence-ring" style="--score: {{ result.confidence }}"><div><strong>{{ result.confidence }}%</strong><span>confidence</span></div></div>
+            <p>Prediction confidence</p>
+          </div>
+        </div>
+        <div class="clinical-note"><span aria-hidden="true">✦</span><p><b>What this means:</b> This is an algorithmic screening estimate, not a diagnosis. A clinician can interpret it alongside your symptoms, history, examination and tests.</p></div>
+      </article>
+
+      <aside class="result-side-card reveal">
+        <span class="side-card-label">Screening snapshot</span>
+        <div class="snapshot-rule"><span>Model class</span><b>{{ '1 — High risk' if result.prediction == 1 else '0 — Lower risk' }}</b></div>
+        <div class="snapshot-rule"><span>High-risk score</span><b>{{ result.risk_probability }}%</b></div>
+        <div class="snapshot-rule"><span>Model confidence</span><b>{{ result.confidence }}%</b></div>
+        <div class="snapshot-rule"><span>Factors shown</span><b>{{ result.factors|length }} of 13</b></div>
+        <p><span class="tiny-live-dot"></span> Generated in this browser session</p>
+      </aside>
+    </section>
+
+    <section class="result-layout">
+      <div class="result-main-column">
+        <article class="insight-card reveal">
+          <div class="card-heading"><div><span class="card-kicker">Risk magnitude</span><h2>High-risk probability</h2></div><span class="info-tip" title="This reflects the model's probability for class 1, not a diagnosis.">i</span></div>
+          <div class="meter-wrap" style="--risk: {{ result.risk_probability }}%"><div class="risk-meter"><span class="meter-marker"></span></div><div class="meter-labels"><span>Lower</span><span>Higher</span></div></div>
+          <p class="card-note">The marker represents the probability assigned by this model to its high-risk class. It should be interpreted only with a clinician’s full evaluation.</p>
+        </article>
+
+        <article class="insight-card reveal">
+          <div class="card-heading"><div><span class="card-kicker">Model-weighted considerations</span><h2>Factors included in this estimate</h2></div><span class="info-tip" title="These are model-weighted screening considerations. They do not prove cause or diagnose disease.">i</span></div>
+          <p class="card-note factor-intro">The model considers all 13 inputs. The items below are the most prominent model-weighted considerations for this entry, not a clinical explanation or diagnosis.</p>
+          <div class="factor-list">
+            {% for factor in result.factors %}
+              <div class="factor-row"><div class="factor-name"><span>{{ loop.index }}</span><div><b>{{ factor.name }}</b><small>{{ factor.detail }}</small></div></div><div class="factor-bar"><span style="--factor: {{ [factor.weight * 1.7, 100]|min }}%"></span></div></div>
+            {% endfor %}
+          </div>
+        </article>
+
+        <article class="disclaimer-card reveal">
+          <div class="disclaimer-icon">!</div><div><h2>Professional medical disclaimer</h2><p>CareGPT AI is an educational screening tool and does not provide medical advice, diagnosis or treatment. Do not delay seeking care because of this result. If you have chest pain, severe shortness of breath, fainting, or pain spreading to your arm, jaw, neck or back, seek emergency medical help immediately.</p></div>
+        </article>
+      </div>
+
+      <aside class="recommendation-panel reveal">
+        <div class="recommendation-heading"><span class="recommendation-icon">✦</span><div><span class="card-kicker">For your next step</span><h2>General recommendations</h2></div></div>
+        <div class="recommendation-list">
+          {% for item in result.recommendations %}
+            <article class="recommendation"><span class="recommendation-bullet">{% if item.icon == 'calendar' %}□{% elif item.icon == 'shield' %}◇{% elif item.icon == 'heart' %}♡{% elif item.icon == 'activity' %}⌁{% else %}!{% endif %}</span><div><h3>{{ item.title }}</h3><p>{{ item.body }}</p></div></article>
+          {% endfor %}
+        </div>
+        <div class="ask-panel"><p>Want help preparing for a care visit?</p><span>Ask about the result in general terms, or create a list of questions for your clinician.</span><a class="button button-white" href="{{ url_for('chat') }}">Ask CareGPT <span aria-hidden="true">→</span></a></div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true"><span></span><i></i></span><span>CareGPT <b>AI</b></span></a><p>AI-assisted health education for more informed conversations.</p><div><a href="{{ url_for('index') }}#assessment">New assessment</a><a href="{{ url_for('chat') }}">Care companion</a></div><p class="footer-disclaimer">CareGPT AI does not provide medical advice, diagnosis, or treatment.</p></footer>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

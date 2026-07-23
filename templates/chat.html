@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CareGPT AI educational health companion.">
+  <title>CareGPT AI | Care Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="chat-page">
+  <header class="site-header" data-header>
+    <a class="brand" href="{{ url_for('index') }}" aria-label="CareGPT AI home"><span class="brand-mark" aria-hidden="true"><span></span><i></i></span><span>CareGPT <b>AI</b></span></a>
+    <nav class="site-nav" aria-label="Main navigation"><a href="{{ url_for('index') }}#assessment">Assessment</a><a href="{{ url_for('result') if latest_result else url_for('index') }}">{% if latest_result %}My result{% else %}How it works{% endif %}</a></nav>
+    <div class="header-actions"><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><span aria-hidden="true">◐</span></button><a class="button button-small button-primary hide-mobile" href="{{ url_for('index') }}#assessment">New assessment <span aria-hidden="true">→</span></a></div>
+  </header>
+
+  <main class="chat-shell shell">
+    <aside class="chat-intro reveal">
+      <a class="back-link" href="{{ url_for('result') if latest_result else url_for('index') }}">← {% if latest_result %}Back to result{% else %}Back to home{% endif %}</a>
+      <div class="eyebrow">Care companion · demo</div>
+      <h1>A calmer way to<br><span>ask questions.</span></h1>
+      <p>CareGPT can explain this educational screening in plain language and help you prepare questions for a healthcare professional.</p>
+      {% if latest_result %}
+        <div class="chat-result-chip"><span class="status-dot {% if latest_result.prediction == 1 %}status-high{% else %}status-low{% endif %}"></span><div><small>Latest screening</small><b>{{ latest_result.risk_label }} · {{ latest_result.confidence }}% confidence</b></div></div>
+      {% endif %}
+      <div class="chat-safety"><span>!</span><p><b>Not for urgent symptoms</b><br>For chest pressure, severe breathing difficulty, fainting, or sudden weakness, seek emergency care now.</p></div>
+    </aside>
+
+    <section class="chat-window reveal" aria-label="CareGPT conversation">
+      <div class="chat-window-top"><div class="assistant-avatar">✦</div><div><b>CareGPT assistant</b><span><i></i> Educational support</span></div><button class="icon-button" type="button" aria-label="Conversation options">•••</button></div>
+      <div class="chat-log" data-chat-log aria-live="polite">
+        <article class="message message-assistant"><div class="message-avatar">✦</div><div class="message-content"><p>Hello. I’m your CareGPT companion.</p><p>I can explain how the screening works, help you understand what a probability means, or help you make questions for a clinician. I don’t diagnose conditions or replace professional medical care.</p></div></article>
+        {% if latest_result %}
+          <article class="message message-assistant"><div class="message-avatar">✦</div><div class="message-content"><p>Your latest screening is marked <strong>{{ latest_result.risk_label }}</strong> with <strong>{{ latest_result.confidence }}% confidence</strong>. Would you like a simple explanation of what that result can and cannot tell you?</p></div></article>
+        {% endif %}
+      </div>
+      <div class="suggestion-row no-print" aria-label="Suggested questions"><button type="button" data-suggestion="What does my screening result mean?">Explain my result</button><button type="button" data-suggestion="What questions should I ask my clinician?">Questions for my clinician</button><button type="button" data-suggestion="Can you explain cholesterol and blood pressure?">Explain vital signs</button></div>
+      <form class="chat-composer" action="{{ url_for('chat_reply') }}" method="post" data-chat-form>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label class="sr-only" for="chat-message">Ask CareGPT</label>
+        <textarea id="chat-message" name="message" rows="1" maxlength="500" placeholder="Ask about your screening…" required data-chat-input></textarea>
+        <button class="composer-send" type="submit" aria-label="Send message"><span aria-hidden="true">↑</span></button>
+      </form>
+      <p class="chat-disclaimer">CareGPT provides general health information only. Always consult a qualified clinician for medical advice.</p>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CareGPT AI provides an educational heart-disease risk screening based on a Random Forest model.">
+  <title>CareGPT AI | Heart Health Screening</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="site-header" data-header>
+    <a class="brand" href="{{ url_for('index') }}" aria-label="CareGPT AI home">
+      <span class="brand-mark" aria-hidden="true"><span></span><i></i></span>
+      <span>CareGPT <b>AI</b></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#how-it-works">How it works</a>
+      <a href="#assessment">Assessment</a>
+      <a href="{{ url_for('chat') }}">Care companion</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><span aria-hidden="true">◐</span></button>
+      <a class="button button-small button-primary hide-mobile" href="#assessment">Start assessment <span aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="live-dot"></span> Clinical intelligence platform</div>
+        <h1>Predict.<br><span>Understand.</span><br>Move forward.</h1>
+        <p class="hero-description">An educational heart-health screening that turns 13 clinical inputs into a clear, clinician-ready conversation starter.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#assessment">Assess my risk <span aria-hidden="true">→</span></a>
+          <a class="button button-ghost" href="#how-it-works">See how it works</a>
+        </div>
+        <div class="trust-row">
+          <div class="avatars" aria-hidden="true"><span>J</span><span>K</span><span>M</span><span>R</span></div>
+          <p><strong>Designed for clarity</strong><br>Built for informed clinical conversations</p>
+        </div>
+      </div>
+
+      <div class="heart-stage reveal" aria-label="Illustration of a 3D digital heart" role="img">
+        <div class="stage-grid"></div>
+        <div class="heart-orbit orbit-one"></div>
+        <div class="heart-orbit orbit-two"></div>
+        <div class="heart-shadow"></div>
+        <div class="heart-3d">
+          <div class="heart-lobe heart-lobe-left"></div>
+          <div class="heart-lobe heart-lobe-right"></div>
+          <div class="heart-body"></div>
+          <div class="heart-vein vein-one"></div>
+          <div class="heart-vein vein-two"></div>
+          <div class="heart-spark spark-one"></div>
+          <div class="heart-spark spark-two"></div>
+          <div class="heart-spark spark-three"></div>
+        </div>
+        <div class="scan-card scan-card-top"><span class="scan-icon">⌁</span><span>MODEL SIGNAL</span><strong>13 inputs</strong></div>
+        <div class="scan-card scan-card-bottom"><span class="scan-pulse"></span><span>HEART STATUS</span><strong>Ready to assess</strong></div>
+        <p class="stage-caption">AI-assisted cardiovascular screening</p>
+      </div>
+    </section>
+
+    <section class="signal-strip shell" aria-label="CareGPT capabilities">
+      <div><span class="signal-number">13</span><span>clinical inputs<br>considered</span></div>
+      <div><span class="signal-number">2</span><span>risk categories<br>explained clearly</span></div>
+      <div><span class="signal-number">1</span><span>next-step plan<br>to discuss with care</span></div>
+    </section>
+
+    <section id="how-it-works" class="feature-section shell section-space">
+      <div class="section-heading reveal">
+        <div class="eyebrow">More than a number</div>
+        <h2>Clear insights,<br><span>calmly delivered.</span></h2>
+        <p>CareGPT AI organizes complex assessment data into a simple experience—without presenting a screening estimate as a diagnosis.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card reveal">
+          <div class="feature-visual visual-neural"><i></i><i></i><i></i><i></i><b></b><b></b><b></b></div>
+          <span class="feature-index">01 / ASSESS</span>
+          <h3>Thoughtful inputs</h3>
+          <p>Enter standard cardiovascular screening measurements in one focused, guided form.</p>
+        </article>
+        <article class="feature-card reveal">
+          <div class="feature-visual visual-score"><div class="mini-ring"><span>84</span></div><i></i><i></i><i></i></div>
+          <span class="feature-index">02 / UNDERSTAND</span>
+          <h3>Context for your result</h3>
+          <p>See a confidence score, risk meter and the model-weighted factors included in its estimate.</p>
+        </article>
+        <article class="feature-card reveal">
+          <div class="feature-visual visual-chat"><span></span><span></span><span></span><i>✦</i></div>
+          <span class="feature-index">03 / DISCUSS</span>
+          <h3>Continue the conversation</h3>
+          <p>Use the Care companion for general explanations and questions to take to a healthcare professional.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="assessment" class="assessment-section shell section-space">
+      <div class="assessment-intro reveal">
+        <div class="eyebrow">Heart disease assessment</div>
+        <h2>Start with a<br><span>complete picture.</span></h2>
+        <p>This educational screening uses a trained Random Forest model. Fill in each field as accurately as you can.</p>
+        <div class="privacy-note"><span aria-hidden="true">⌘</span><p><b>Your information stays in this session.</b><br>Inputs are used to produce your current screening result and are not persisted by this app.</p></div>
+        {% if not model_available %}
+          <div class="model-status model-status-warning"><span>!</span><p><b>Assessment temporarily unavailable</b><br>The approved prediction model has not been installed yet.</p></div>
+        {% endif %}
+      </div>
+
+      <form class="assessment-form reveal" action="{{ url_for('analyze') }}" method="post" novalidate data-risk-form>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-topline"><span>Heart disease assessment</span><small>All fields required</small></div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="form-message form-message-{{ category }}" role="alert">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+        {% if error_message %}<div class="form-message form-message-error" role="alert">{{ error_message }}</div>{% endif %}
+
+        <fieldset>
+          <legend><span>01</span> Personal biometrics</legend>
+          <div class="form-grid two-columns">
+            <label>Age <span class="required">*</span><input name="age" type="number" min="18" max="120" step="1" placeholder="e.g. 45" required inputmode="numeric"></label>
+            <label>Gender <span class="required">*</span><select name="sex" required><option value="" selected disabled>Select gender</option><option value="1">Male</option><option value="0">Female</option></select></label>
+            <label class="form-full">Chest pain type <span class="required">*</span><select name="cp" required><option value="" selected disabled>Select type of pain</option><option value="0">Typical angina</option><option value="1">Atypical angina</option><option value="2">Non-anginal pain</option><option value="3">Asymptomatic</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>02</span> Clinical vital signs</legend>
+          <div class="form-grid two-columns">
+            <label>Resting blood pressure <span class="required">*</span><span class="unit">mmHg</span><input name="trestbps" type="number" min="50" max="260" step="1" placeholder="e.g. 120" required inputmode="numeric"></label>
+            <label>Cholesterol <span class="required">*</span><span class="unit">mg/dL</span><input name="chol" type="number" min="50" max="700" step="1" placeholder="e.g. 190" required inputmode="numeric"></label>
+            <label>Fasting blood sugar <span class="required">*</span><select name="fbs" required><option value="" selected disabled>Select range</option><option value="0">≤ 120 mg/dL</option><option value="1">&gt; 120 mg/dL</option></select></label>
+            <label>Resting ECG <span class="required">*</span><select name="restecg" required><option value="" selected disabled>Select result</option><option value="0">Normal</option><option value="1">ST-T wave abnormality</option><option value="2">Left ventricular hypertrophy</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>03</span> Cardiac stress performance</legend>
+          <div class="form-grid two-columns">
+            <label>Maximum heart rate <span class="required">*</span><span class="unit">bpm</span><input name="thalach" type="number" min="40" max="250" step="1" placeholder="e.g. 150" required inputmode="numeric"></label>
+            <label>Exercise-induced angina <span class="required">*</span><select name="exang" required><option value="" selected disabled>Select response</option><option value="0">No</option><option value="1">Yes</option></select></label>
+            <label class="form-full">ST depression (oldpeak) <span class="required">*</span><input name="oldpeak" type="number" min="0" max="15" step="0.1" placeholder="Relative to rest, e.g. 1.4" required inputmode="decimal"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>04</span> Imaging &amp; advanced diagnostics</legend>
+          <div class="form-grid two-columns">
+            <label>ST slope <span class="required">*</span><select name="slope" required><option value="" selected disabled>Select slope</option><option value="0">Upsloping</option><option value="1">Flat</option><option value="2">Downsloping</option></select></label>
+            <label>Major vessels (fluoroscopy) <span class="required">*</span><select name="ca" required><option value="" selected disabled>Select count</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+            <label class="form-full">Thalassemia type <span class="required">*</span><select name="thal" required><option value="" selected disabled>Select type</option><option value="1">Normal</option><option value="2">Fixed defect</option><option value="3">Reversible defect</option></select></label>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button class="button button-ghost" type="reset">Reset</button>
+          <button class="button button-primary" type="submit" {% if not model_available %}disabled{% endif %}>Analyze risk <span aria-hidden="true">✦</span></button>
+        </div>
+        <p class="form-footnote">By continuing, you acknowledge that this is an educational screening, not medical advice or a diagnosis.</p>
+      </form>
+    </section>
+
+    <section class="cta-section shell section-space">
+      <div class="cta-panel reveal">
+        <div><div class="eyebrow eyebrow-light">Care companion</div><h2>Questions after your assessment?</h2><p>Continue with a calm, general-information chat built around your next conversation with a healthcare professional.</p></div>
+        <a class="button button-white" href="{{ url_for('chat') }}">Open Care companion <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true"><span></span><i></i></span><span>CareGPT <b>AI</b></span></a>
+    <p>AI-assisted health education for more informed conversations.</p>
+    <div><a href="#assessment">Assessment</a><a href="{{ url_for('chat') }}">Care companion</a><a href="#disclaimer">Medical disclaimer</a></div>
+    <p id="disclaimer" class="footer-disclaimer">CareGPT AI does not provide medical advice, diagnosis, or treatment. Contact a qualified healthcare professional for personal medical guidance. In an emergency, seek local emergency care immediately.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
